@@ -1,0 +1,73 @@
+name: 'Last9 Deployment Marker'
+description: 'Send deployment markers to Last9 Change Events API for observability tracking'
+author: 'Last9'
+
+branding:
+  icon: 'activity'
+  color: 'blue'
+
+inputs:
+  refresh_token:
+    description: 'Last9 API refresh token (store in GitHub Secrets)'
+    required: true
+
+  org_slug:
+    description: 'Last9 organization slug'
+    required: true
+
+  api_base_url:
+    description: 'Last9 API base URL'
+    required: false
+    default: 'https://app.last9.io'
+
+  event_name:
+    description: 'Name for the deployment event'
+    required: false
+    default: 'deployment'
+
+  event_state:
+    description: 'Event state: start, stop, or both'
+    required: false
+    default: 'stop'
+
+  data_source_name:
+    description: 'Last9 cluster/data source name'
+    required: false
+
+  include_github_attributes:
+    description: 'Include GitHub context attributes (repository, commit, workflow, etc.)'
+    required: false
+    default: 'true'
+
+  custom_attributes:
+    description: 'Custom attributes as JSON object (e.g., {"environment": "production", "version": "1.0.0"})'
+    required: false
+
+  max_retry_attempts:
+    description: 'Maximum number of retry attempts for API calls'
+    required: false
+    default: '3'
+
+  retry_backoff_ms:
+    description: 'Initial retry backoff in milliseconds'
+    required: false
+    default: '1000'
+
+  max_retry_backoff_ms:
+    description: 'Maximum retry backoff in milliseconds'
+    required: false
+    default: '30000'
+
+outputs:
+  success:
+    description: 'Whether the deployment marker was sent successfully'
+
+  start_timestamp:
+    description: 'ISO8601 timestamp of start event (if sent)'
+
+  stop_timestamp:
+    description: 'ISO8601 timestamp of stop event (if sent)'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__linear-server__get_issue",
+      "WebFetch(domain:last9.io)",
+      "mcp__linear-server__update_issue",
+      "mcp__linear-server__get_attachment",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(npm install:*)",
+      "mcp__linear-server__create_comment",
+      "Bash(npm test:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

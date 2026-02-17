@@ -1,0 +1,41 @@
+name: Test Deployment Marker Action
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_state:
+        description: 'Event state to test'
+        required: true
+        type: choice
+        options:
+          - start
+          - stop
+          - both
+        default: 'stop'
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test Last9 Deployment Marker
+        id: test-marker
+        uses: ./
+        with:
+          refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
+          org_slug: ${{ secrets.LAST9_ORG_SLUG }}
+          event_state: ${{ inputs.event_state }}
+          custom_attributes: |
+            {
+              "environment": "test",
+              "test_run": "true"
+            }
+
+      - name: Show outputs
+        run: |
+          echo "Success: ${{ steps.test-marker.outputs.success }}"
+          echo "Start: ${{ steps.test-marker.outputs.start_timestamp }}"
+          echo "Stop: ${{ steps.test-marker.outputs.stop_timestamp }}"
