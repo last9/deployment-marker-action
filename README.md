@@ -99,12 +99,37 @@ jobs:
 
 ## Setup
 
-### 1. Get Your Last9 API Token
+### 1. Generate a Last9 Refresh Token
+
+**Prerequisites:**
+- You must be an **Admin user** in your Last9 organization
+- Editors and Viewers cannot generate refresh tokens
+
+**Steps:**
 
 1. Log in to [Last9](https://app.last9.io)
-2. Go to **Settings** → **API Access**
-3. Create a new **Refresh Token** with **Write** scope
-4. Copy the token (you won't be able to see it again!)
+2. Navigate to **Settings** → **API Access**
+3. Click the **Refresh Token** tab
+4. Click **New token**
+5. Configure the token:
+   - **Name**: Enter a descriptive name (e.g., `github-actions-production`)
+   - **Scope**: Select **Write** (required for sending deployment markers)
+6. Click **Create**
+7. **Important:** Copy the token immediately - it will only be shown once and cannot be retrieved later
+8. Store the token securely (you'll add it to GitHub Secrets in the next step)
+
+**Token Details:**
+- Refresh tokens don't expire but can be revoked by admins
+- Access tokens generated from refresh tokens expire after **24 hours** (automatically refreshed by this action)
+- You can revoke tokens at any time from the API Access page
+
+**Security Best Practices:**
+- Use separate tokens for different environments (production, staging, etc.)
+- Name tokens clearly to identify their purpose
+- Revoke tokens immediately if compromised
+- Regularly audit active tokens and remove unused ones
+
+For more information, see the [Last9 API documentation](https://last9.io/docs/getting-started-with-api/).
 
 ### 2. Add Token to GitHub Secrets
 
