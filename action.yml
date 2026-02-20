@@ -16,8 +16,8 @@ inputs:
     required: true
 
   service_name:
-    description: 'Service name to correlate deployment markers with APM dashboards (must match your APM service name exactly)'
-    required: true
+    description: 'Service name to correlate deployment markers with APM dashboards (must match your APM service name exactly). Defaults to repository name.'
+    required: false
 
   env:
     description: 'Deployment environment to correlate with APM dashboards (e.g. production, staging)'

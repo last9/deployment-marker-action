@@ -46,7 +46,7 @@ export function loadConfig(context: ContextProvider): ActionConfig {
     // Required inputs
     const refreshToken = context.getInput('refresh_token', true);
     const orgSlug = context.getInput('org_slug', true);
-    const serviceName = context.getInput('service_name', true);
+    const serviceName = context.getInput('service_name') || context.getRepository().repo;
     const env = context.getInput('env', true);
 
     // Mark token as secret
