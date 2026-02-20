@@ -30,7 +30,7 @@ jobs:
           event_state: ${{ inputs.event_state }}
           custom_attributes: |
             {
-              "environment": "test",
+              "deployment_environment": "test",
               "test_run": "true"
             }
 
