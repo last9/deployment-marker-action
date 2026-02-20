@@ -27,10 +27,11 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: ${{ secrets.LAST9_ORG_SLUG }}
+          service_name: deployment-marker-action
+          env: test
           event_state: ${{ inputs.event_state }}
           custom_attributes: |
             {
-              "deployment_environment": "test",
               "test_run": "true"
             }
 

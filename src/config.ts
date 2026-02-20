@@ -20,6 +20,10 @@ export interface ActionConfig {
   eventName: string;
   eventState: 'start' | 'stop' | 'both';
 
+  // Correlation attributes (required)
+  serviceName: string;
+  env: string;
+
   // Attributes configuration
   includeGitHubAttributes: boolean;
   customAttributes: Record<string, string | number | boolean>;
@@ -42,6 +46,8 @@ export function loadConfig(context: ContextProvider): ActionConfig {
     // Required inputs
     const refreshToken = context.getInput('refresh_token', true);
     const orgSlug = context.getInput('org_slug', true);
+    const serviceName = context.getInput('service_name', true);
+    const env = context.getInput('env', true);
 
     // Mark token as secret
     context.setSecret(refreshToken);
@@ -75,6 +81,8 @@ export function loadConfig(context: ContextProvider): ActionConfig {
       dataSourceName,
       eventName,
       eventState,
+      serviceName,
+      env,
       includeGitHubAttributes,
       customAttributes,
       maxRetryAttempts,

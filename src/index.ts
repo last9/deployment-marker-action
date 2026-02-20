@@ -49,7 +49,9 @@ async function run(): Promise<void> {
     // Collect attributes
     const attributes = collectAttributes(context, {
       includeGitHub: config.includeGitHubAttributes,
-      customAttributes: config.customAttributes
+      customAttributes: config.customAttributes,
+      serviceName: config.serviceName,
+      env: config.env
     });
 
     // Track results

@@ -12,6 +12,8 @@ import { getLogger } from './utils/logger';
 export interface AttributeConfig {
   includeGitHub: boolean;
   customAttributes: Record<string, string | number | boolean>;
+  serviceName: string;
+  env: string;
 }
 
 /**
@@ -24,6 +26,10 @@ export function collectAttributes(
   const logger = getLogger();
   const attributes: Attributes = {};
 
+  // Always set required correlation attributes first
+  attributes['service_name'] = config.serviceName;
+  attributes['env'] = config.env;
+
   // Collect GitHub context attributes
   if (config.includeGitHub) {
     try {
@@ -34,7 +40,6 @@ export function collectAttributes(
       const event = context.getEvent();
 
       attributes['repository'] = repo.fullName;
-      attributes['service_name'] = repo.repo;
       attributes['workflow'] = workflow.name;
       attributes['run_id'] = workflow.runId.toString();
       attributes['run_number'] = workflow.runNumber.toString();

@@ -15,6 +15,14 @@ inputs:
     description: 'Last9 organization slug'
     required: true
 
+  service_name:
+    description: 'Service name to correlate deployment markers with APM dashboards (must match your APM service name exactly)'
+    required: true
+
+  env:
+    description: 'Deployment environment to correlate with APM dashboards (e.g. production, staging)'
+    required: true
+
   api_base_url:
     description: 'Last9 API base URL'
     required: false
