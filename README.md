@@ -23,6 +23,7 @@ Add this step to your workflow after deployment:
   with:
     refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
     org_slug: 'your-org-slug'
+    env: production
 ```
 
 ### Track Both Start and Stop Events
@@ -40,6 +41,7 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: 'your-org-slug'
+          env: production
           event_state: 'start'
 
       - name: Deploy application
@@ -53,7 +55,22 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: 'your-org-slug'
+          env: production
           event_state: 'stop'
+```
+
+### With Explicit Service Name
+
+For monorepos or repos with multiple services, override the default service name:
+
+```yaml
+- name: Mark deployment
+  uses: last9/deployment-marker-action@v1
+  with:
+    refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
+    org_slug: 'your-org-slug'
+    service_name: 'payment-service'
+    env: production
 ```
 
 ### With Custom Attributes
@@ -64,11 +81,10 @@ jobs:
   with:
     refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
     org_slug: 'your-org-slug'
+    env: production
     custom_attributes: |
       {
-        "environment": "production",
         "version": "${{ github.ref_name }}",
-        "service": "api-server",
         "team": "platform"
       }
 ```
@@ -79,12 +95,14 @@ jobs:
 |-------|----------|---------|-------------|
 | `refresh_token` | **Yes** | - | Last9 API refresh token (store in GitHub Secrets) |
 | `org_slug` | **Yes** | - | Your Last9 organization slug |
-| `api_base_url` | No | `https://app.last9.io` | Last9 API base URL |
-| `event_name` | No | `deployment` | Name for the deployment event |
+| `env` | **Yes** | - | Deployment environment (e.g. `production`, `staging`). Must match your APM environment label exactly. |
+| `service_name` | No | Repository name | Service name for APM correlation. Must match your APM service name exactly. |
 | `event_state` | No | `stop` | Event state: `start`, `stop`, or `both` |
+| `event_name` | No | `deployment` | Name for the deployment event |
 | `data_source_name` | No | - | Last9 cluster/data source name |
+| `api_base_url` | No | `https://app.last9.io` | Last9 API base URL |
 | `include_github_attributes` | No | `true` | Include GitHub context attributes |
-| `custom_attributes` | No | - | Custom attributes as JSON object |
+| `custom_attributes` | No | - | Additional attributes as JSON object |
 | `max_retry_attempts` | No | `3` | Maximum number of retry attempts |
 | `retry_backoff_ms` | No | `1000` | Initial retry backoff in milliseconds |
 | `max_retry_backoff_ms` | No | `30000` | Maximum retry backoff in milliseconds |
@@ -143,12 +161,22 @@ For more information, see the [Last9 API documentation](https://last9.io/docs/ge
 
 See [Usage](#usage) examples above.
 
+## APM Dashboard Correlation
+
+The `service_name` and `env` attributes must match your APM service labels **exactly** for deployment markers to appear as overlays on Last9 dashboards.
+
+- `service_name`: defaults to the repository name if not set
+- `env`: must be provided explicitly (e.g. `production`, `staging`)
+
+When they match, deployment markers appear as red vertical lines on your APM charts, making it easy to correlate deployments with changes in latency, error rate, and throughput.
+
 ## GitHub Context Attributes
 
 When `include_github_attributes` is `true` (default), the following attributes are automatically included:
 
 - `repository` - Repository full name (e.g., `owner/repo`)
-- `service_name` - Repository name (e.g., `repo`)
+- `service_name` - From `service_name` input (defaults to repo name)
+- `env` - From `env` input
 - `workflow` - Workflow name
 - `run_id` - Workflow run ID
 - `run_number` - Workflow run number
@@ -172,6 +200,7 @@ To prevent deployment failures from blocking your workflow, set `if: always()`:
   with:
     refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
     org_slug: 'your-org-slug'
+    env: production
 ```
 
 ## Troubleshooting
@@ -213,13 +242,9 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: 'acme'
+          service_name: 'api'
+          env: production
           event_state: 'start'
-          custom_attributes: |
-            {
-              "environment": "production",
-              "namespace": "default",
-              "service": "api"
-            }
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f k8s/
@@ -230,6 +255,8 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: 'acme'
+          service_name: 'api'
+          env: production
           event_state: 'stop'
 ```
 
@@ -264,11 +291,23 @@ jobs:
         with:
           refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
           org_slug: 'acme'
+          env: ${{ inputs.environment }}
           custom_attributes: |
             {
-              "environment": "${{ inputs.environment }}",
               "version": "${{ github.sha }}"
             }
+```
+
+### Monorepo with Multiple Services
+
+```yaml
+- name: Mark payment-service deployment
+  uses: last9/deployment-marker-action@v1
+  with:
+    refresh_token: ${{ secrets.LAST9_REFRESH_TOKEN }}
+    org_slug: 'acme'
+    service_name: 'payment-service'
+    env: production
 ```
 
 ## Contributing
