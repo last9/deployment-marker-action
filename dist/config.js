@@ -9,6 +9,8 @@ function loadConfig(context) {
     try {
         const refreshToken = context.getInput('refresh_token', true);
         const orgSlug = context.getInput('org_slug', true);
+        const serviceName = context.getInput('service_name') || context.getRepository().repo;
+        const env = context.getInput('env', true);
         context.setSecret(refreshToken);
         const apiBaseUrl = context.getInput('api_base_url') || 'https://app.last9.io';
         const eventName = context.getInput('event_name') || 'deployment';
@@ -26,6 +28,8 @@ function loadConfig(context) {
             dataSourceName,
             eventName,
             eventState,
+            serviceName,
+            env,
             includeGitHubAttributes,
             customAttributes,
             maxRetryAttempts,
