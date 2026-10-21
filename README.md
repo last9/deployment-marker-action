@@ -8,7 +8,7 @@ Send deployment markers to Last9's Change Events API to track deployments on you
 - 📊 **Rich Metadata** - Automatically captures GitHub context (commit, workflow, actor, etc.)
 - 🔄 **Automatic Retries** - Handles transient failures with exponential backoff
 - 🔒 **Secure** - Automatic token masking in logs
-- ⚡ **Fast** - Runs in Node 20 with minimal overhead
+- ⚡ **Fast** - Runs on the Node 24 Actions runtime with minimal overhead (self-hosted runners need v2.327.0+)
 - 📝 **Flexible** - Support for custom attributes and multiple deployment stages
 
 ## Usage

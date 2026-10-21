@@ -77,5 +77,5 @@ outputs:
     description: 'ISO8601 timestamp of stop event (if sent)'
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
