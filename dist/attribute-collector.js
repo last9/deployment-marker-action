@@ -5,6 +5,8 @@ const logger_1 = require("./utils/logger");
 function collectAttributes(context, config) {
     const logger = (0, logger_1.getLogger)();
     const attributes = {};
+    attributes['service_name'] = config.serviceName;
+    attributes['env'] = config.env;
     if (config.includeGitHub) {
         try {
             const repo = context.getRepository();
@@ -13,7 +15,6 @@ function collectAttributes(context, config) {
             const actor = context.getActor();
             const event = context.getEvent();
             attributes['repository'] = repo.fullName;
-            attributes['service_name'] = repo.repo;
             attributes['workflow'] = workflow.name;
             attributes['run_id'] = workflow.runId.toString();
             attributes['run_number'] = workflow.runNumber.toString();

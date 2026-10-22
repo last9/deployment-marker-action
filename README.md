@@ -8,7 +8,7 @@ Send deployment markers to Last9's Change Events API to track deployments on you
 - 📊 **Rich Metadata** - Automatically captures GitHub context (commit, workflow, actor, etc.)
 - 🔄 **Automatic Retries** - Handles transient failures with exponential backoff
 - 🔒 **Secure** - Automatic token masking in logs
-- ⚡ **Fast** - Runs in Node 20 with minimal overhead
+- ⚡ **Fast** - Runs on the Node 24 Actions runtime with minimal overhead (see [Node.js Runtime](#nodejs-runtime))
 - 📝 **Flexible** - Support for custom attributes and multiple deployment stages
 
 ## Usage
@@ -160,6 +160,14 @@ For more information, see the [Last9 API documentation](https://last9.io/docs/ge
 ### 3. Add Action to Your Workflow
 
 See [Usage](#usage) examples above.
+
+## Node.js Runtime
+
+The action declares `runs.using: node24`. The exact Node 24 patch is the one bundled with the GitHub Actions runner, not one this repository chooses.
+
+- **Required:** Node **24.22.1** or later. It is the first 24.x release that rejects TLS chains through the compromised eMudhra intermediates ([nodejs/node#66871](https://github.com/nodejs/node/pull/66871)). Earlier 24.x releases accept them.
+- **Self-hosted runners:** use an actions/runner release that bundles Node 24.22.1+ (`NODE24_VERSION` in the runner's `src/Misc/externals.sh`). Node 24 support needs v2.327.0 or later.
+- **Development:** `.nvmrc` and `engines.node` pin `24.22.1` for building and testing `dist/`.
 
 ## APM Dashboard Correlation
 
